@@ -3,101 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบบันทึกผลการเรียน - 8 กลุ่มสาระ</title>
+    <title>ระบบบันทึกผลการเรียนรายบุคคล</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #1a73e8; --success: #188038; --bg: #f8f9fa; }
-        body { font-family: 'Sarabun', sans-serif; background-color: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .container { background: white; width: 100%; max-width: 700px; padding: 30px; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
-        h2 { color: var(--primary); text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .section-title { background: #e8f0fe; padding: 10px; border-radius: 5px; margin-top: 20px; font-weight: bold; color: var(--primary); }
-        label { display: block; margin-top: 15px; font-weight: bold; color: #444; }
-        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        :root { --primary: #1a73e8; --success: #188038; --bg: #f0f2f5; }
+        body { font-family: 'Sarabun', sans-serif; background-color: var(--bg); padding: 20px; }
+        .container { background: white; max-width: 800px; margin: auto; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        h2 { color: var(--primary); text-align: center; margin-bottom: 25px; }
+        .section-title { background: #e8f0fe; padding: 10px 15px; border-radius: 6px; margin: 20px 0 10px; font-weight: bold; color: var(--primary); }
+        label { display: block; margin-top: 12px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-        .calc-result { background: #f1f3f4; padding: 15px; border-radius: 10px; margin-top: 15px; border-left: 5px solid var(--primary); text-align: center; }
-        .calc-result span { font-weight: bold; font-size: 1.2em; color: var(--primary); }
-        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 25px; }
-        button { width: 100%; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-submit { background: var(--success); color: white; }
-        .btn-submit:hover { background: #136a2e; }
-        #loading { display: none; text-align: center; color: var(--primary); font-weight: bold; margin-top: 15px; }
+        .calc-box { background: #fff9c4; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center; font-weight: bold; }
+        button { width: 100%; padding: 15px; margin-top: 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
+        .btn-main { background: var(--success); color: white; }
+        .btn-main:hover { background: #145a2d; }
+        #loading { display: none; text-align: center; color: var(--primary); margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #f8f9fa; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <h2>บันทึกข้อมูลและออกรายงาน PDF</h2>
     <form id="attendanceForm">
-        <h2>บันทึกข้อมูลและออกรายงาน PDF</h2>
-
-        <div class="section-title">ข้อมูลพื้นฐาน</div>
-        <label>ชื่อครูผู้สอน</label>
-        <input type="text" id="teacherName" placeholder="ระบุชื่อ-นามสกุล" required>
-
-        <label>กลุ่มสาระการเรียนรู้</label>
-        <select id="department" required>
-            <option value="" disabled selected>--- เลือกกลุ่มสาระฯ ---</option>
-            <option value="คณิตศาสตร์">คณิตศาสตร์</option>
-            <option value="ภาษาไทย">ภาษาไทย</option>
-            <option value="วิทยาศาสตร์และเทคโนโลยี">วิทยาศาสตร์และเทคโนโลยี</option>
-            <option value="สังคมศึกษา ศาสนา และวัฒนธรรม">สังคมศึกษา ศาสนา และวัฒนธรรม</option>
-            <option value="ภาษาต่างประเทศ">ภาษาต่างประเทศ</option>
-            <option value="การงานอาชีพ">การงานอาชีพ</option>
-            <option value="สุขศึกษาและพลศึกษา">สุขศึกษาและพลศึกษา</option>
-            <option value="ศิลปะ">ศิลปะ</option>
-        </select>
-
+        <div class="section-title">ส่วนที่ 1: ข้อมูลคุณครูและวิชา</div>
         <div class="grid-2">
-            <div><label>รหัสวิชา</label><input type="text" id="courseID" required></div>
-            <div><label>ชื่อรายวิชา</label><input type="text" id="courseName" required></div>
+            <div><label>ชื่อครูผู้สอน</label><input type="text" id="teacherName" required></div>
+            <div>
+                <label>กลุ่มสาระฯ</label>
+                <select id="department" required>
+                    <option value="">--เลือก--</option>
+                    <option value="คณิตศาสตร์">คณิตศาสตร์</option>
+                    <option value="ภาษาไทย">ภาษาไทย</option>
+                    <option value="วิทยาศาสตร์และเทคโนโลยี">วิทยาศาสตร์และเทคโนโลยี</option>
+                    <option value="สังคมศึกษาฯ">สังคมศึกษาฯ</option>
+                    <option value="ภาษาต่างประเทศ">ภาษาต่างประเทศ</option>
+                    <option value="การงานอาชีพ">การงานอาชีพ</option>
+                    <option value="สุขศึกษาและพลศึกษา">สุขศึกษาและพลศึกษา</option>
+                    <option value="ศิลปะ">ศิลปะ</option>
+                </select>
+            </div>
         </div>
-        <label>ชั้น/ห้อง</label>
-        <input type="text" id="classRoom" placeholder="ม.6/1" required>
+        <div class="grid-3">
+            <div><label>รหัสวิชา</label><input type="text" id="courseID" required></div>
+            <div><label>ชื่อวิชา</label><input type="text" id="courseName" required></div>
+            <div><label>ชั้น/ห้อง</label><input type="text" id="classRoom" placeholder="ม.1/1" required></div>
+        </div>
 
-        <div class="section-title">ข้อมูลการมาเรียนรายบุคคล</div>
+        <div class="section-title">ส่วนที่ 2: ข้อมูลนักเรียน</div>
         <div class="grid-2">
             <div><label>เลขประจำตัว</label><input type="text" id="studentID" required></div>
             <div><label>ชื่อ-นามสกุลนักเรียน</label><input type="text" id="studentName" required></div>
         </div>
-
-        <label>เวลาเรียนทั้งหมด (ชม.)</label>
-        <input type="number" id="totalTime" value="40" oninput="calculate()" required>
-
-        <div class="grid-3">
-            <div><label>ขาด</label><input type="number" id="absent" value="0" oninput="calculate()"></div>
-            <div><label>ลา</label><input type="number" id="leave" value="0" oninput="calculate()"></div>
-            <div><label>ป่วย</label><input type="number" id="sick" value="0" oninput="calculate()"></div>
+        <div class="grid-2">
+            <div><label>เวลาเรียนทั้งหมด (ชม.)</label><input type="number" id="totalTime" value="40" oninput="calculate()"></div>
+            <div class="grid-3">
+                <div><label>ขาด</label><input type="number" id="absent" value="0" oninput="calculate()"></div>
+                <div><label>ลา</label><input type="number" id="leave" value="0" oninput="calculate()"></div>
+                <div><label>ป่วย</label><input type="number" id="sick" value="0" oninput="calculate()"></div>
+            </div>
         </div>
 
-        <div class="calc-result">
-            มาเรียนจริง: <span id="presentText">40</span> ชม. | 
-            คิดเป็นร้อยละ: <span id="percentText">100.00</span> %
+        <div class="calc-box">
+            มาเรียน: <span id="presentText">40</span> ชม. | คิดเป็นร้อยละ: <span id="percentText">100.00</span>%
         </div>
 
-        <div id="loading">⏳ กำลังบันทึกและสร้างไฟล์ PDF...</div>
-
-        <div class="btn-group">
-            <button type="submit" class="btn-submit">บันทึกข้อมูลและดาวน์โหลด PDF</button>
-            <button type="button" style="background:#ddd;" onclick="location.reload()">ล้างข้อมูล/เริ่มใหม่</button>
-        </div>
+        <button type="submit" class="btn-main">บันทึกข้อมูลและดาวน์โหลด PDF</button>
+        <div id="loading">⏳ กำลังบันทึกข้อมูล... กรุณารอสักครู่</div>
     </form>
+
+    <div id="summarySection" style="display:none;">
+        <div class="section-title">รายการที่บันทึกแล้วในรอบนี้</div>
+        <table>
+            <thead>
+                <tr><th>ชื่อนักเรียน</th><th>ร้อยละ</th><th>สถานะ</th></tr>
+            </thead>
+            <tbody id="summaryBody"></tbody>
+        </table>
+    </div>
 </div>
 
 <script>
-    // *** แก้ไข: วาง Web App URL จาก Google Sheets ของคุณที่นี่ ***
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwT0hZBbzhPsXLe_NL7AzGAEvXDoODvZ6ODQGB9Kf3j9Dy2zsbnm2c8OGBTUSMzbTw/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyF6kvBkIthveFNCiq2KbIlCIMAspCzMdo4mrnkU9Bsoov5GsYHFNRW_05BMPWT8QY/exec';
 
     function calculate() {
         const total = parseFloat(document.getElementById('totalTime').value) || 0;
         const absent = parseFloat(document.getElementById('absent').value) || 0;
         const leave = parseFloat(document.getElementById('leave').value) || 0;
         const sick = parseFloat(document.getElementById('sick').value) || 0;
-
         const present = total - (absent + leave + sick);
-        const percentage = total > 0 ? (present / total) * 100 : 0;
-
+        const percent = total > 0 ? (present / total * 100).toFixed(2) : 0;
         document.getElementById('presentText').innerText = present;
-        document.getElementById('percentText').innerText = percentage.toFixed(2);
+        document.getElementById('percentText').innerText = percent;
     }
 
     document.getElementById('attendanceForm').addEventListener('submit', function(e) {
@@ -125,10 +126,12 @@
         .then(res => {
             document.getElementById('loading').style.display = 'none';
             if(res.result === "success") {
-                alert('บันทึกสำเร็จ! กำลังดาวน์โหลด PDF...');
-                window.open(res.downloadUrl, '_blank'); // เปิดไฟล์ PDF เพื่อโหลด
+                window.open(res.downloadUrl, '_blank');
+                document.getElementById('summarySection').style.display = 'block';
+                const row = document.getElementById('summaryBody').insertRow(0);
+                row.innerHTML = `<td>${data.studentName}</td><td>${data.percent}%</td><td style="color:green">สำเร็จ</td>`;
                 
-                // ล้างข้อมูลเฉพาะส่วนนักเรียน เพื่อพิมพ์คนถัดไป
+                // ล้างข้อมูลนักเรียนคนเดิมออก
                 document.getElementById('studentID').value = '';
                 document.getElementById('studentName').value = '';
                 document.getElementById('absent').value = '0';
@@ -136,16 +139,12 @@
                 document.getElementById('sick').value = '0';
                 calculate();
                 document.getElementById('studentID').focus();
-            } else {
-                alert('Error: ' + res.message);
             }
-        })
-        .catch(err => {
-            alert('ไม่สามารถเชื่อมต่อระบบได้ กรุณาตรวจสอบ URL ของ Apps Script');
+        }).catch(() => {
+            alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
             document.getElementById('loading').style.display = 'none';
         });
     });
 </script>
-
 </body>
 </html>
